@@ -11,7 +11,8 @@ import base64
 from PIL import Image
 import numpy as np
 import requests
-
+import pandas as pd
+import cv2 
 OCR_API="http://192.168.10.110:3030/ocr"
 #--------------------------------------------------
 # main
@@ -23,6 +24,15 @@ def get_data_url(img_path):
     file_.close()
     return data_url
 
+
+def draw_regions(regions,img):
+    mask=np.copy(img)
+    for region in regions:
+        region = np.array(region).astype(np.int32).reshape((-1))
+        region = region.reshape(-1, 2)
+        mask = cv2.polylines(mask,[region.reshape((-1, 1, 2))],True,(255, 0, 0),2)
+    return mask
+        
 
 def main():
     # intro
@@ -41,9 +51,10 @@ def main():
     # Instructions
     st.markdown("*click on the top-right corner of an image to enlarge it!*")
     # Set the columns
-    cols = st.columns((1, 1))
+    cols = st.columns((1,1,1))
     cols[0].subheader("Input page")
     cols[1].subheader("Detection-output (word level)")
+    cols[2].subheader("Recognition Output")
     
     # Sidebar
     # File selection
@@ -58,48 +69,16 @@ def main():
         cols[0].image(arr)
         image.save("images/data.png")
         with st.spinner('Executing OCR'):
-            with open("images/data.png", 'rb') as f:
-                res = requests.post(OCR_API, files={'file': f})
-                st.json(res)
+            res = requests.post(OCR_API, files={'file': open("images/data.png", 'rb')})
+            res=res.json()
+            # rec
+            df=pd.DataFrame(res["result"])
+            df=df[['text','line_no','word_no','poly']]
+            cols[2].dataframe(df)
+            # det
+            regions=df.poly.tolist()
+            mask=draw_regions(regions,arr)
+            cols[1].image(mask)
             
-    # # canvas
-    # st.markdown("*draw a word in the canvas*")
-    # st.sidebar.header("Configuration")      
-    # realtime_update = st.sidebar.checkbox("Update in realtime", True) 
-    # # Create a canvas component
-    # canvas_result = st_canvas(
-    #     fill_color="rgb(255,255,255)",  # Fixed fill color with some opacity
-    #     stroke_width=5,
-    #     stroke_color="rgb(0,0,0)",
-    #     background_color="rgb(255,255,255)",
-    #     background_image=None,
-    #     update_streamlit=realtime_update,
-    #     height=150,
-    #     drawing_mode="freedraw",
-    #     display_toolbar=st.sidebar.checkbox("Display toolbar", True),
-    #     key="main",
-    # )
-    
-    # if st.button("Predict"):
-    #     if canvas_result.image_data is not None:
-    #         with st.spinner('Loading model...'):
-    #             ocr=BHOCR("models/model.h5")
-    
-    #         with st.spinner('Analyzing...'):
-    #             img=np.asarray(canvas_result.image_data).astype(np.uint8)
-    #             cv2.imwrite("tests/data.png",img)
-    #             st.write("Image saved at:tests/data.png")
-    #             img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    #             res = pytesseract.image_to_string(img, lang='ben', config='--psm 6')
-    #             st.write(f"Tesseract Recognition Before Transformation:",res.split("\n")[0])
-    #             text,img=ocr.infer(img)
-    #             st.image(img,caption="Grapheme Transformation Result")
-    #             st.write(f"Tesseract Recognition After Transformation:",text)
-                
-    #     else:
-    #         st.write("Please Draw a word first!!!")
-
-
-
 if __name__ == '__main__':  
     main()

@@ -14,7 +14,6 @@ import cv2
 from flask import Flask,request, render_template,jsonify
 from werkzeug.utils import secure_filename
 from time import time
-from pprint import pprint
 # models
 from ocr.ocr import OCR
 from ocr.utils import read_img
