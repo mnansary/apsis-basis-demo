@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+debug.ipynb
+weights/tts/* 
+nohup.out
