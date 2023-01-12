@@ -56,6 +56,7 @@ def main():
     cols[1].subheader("Detection-output (word level)")
     cols[2].subheader("Recognition Output")
     
+    
     # Sidebar
     # File selection
     st.sidebar.title("Document selection")
@@ -79,6 +80,19 @@ def main():
             regions=df.poly.tolist()
             mask=draw_regions(regions,arr)
             cols[1].image(mask)
-            
+            # lines
+            lines=[]
+            for line in df.line_no.unique():
+                ldf=df.loc[df.line_no==line]
+                ldf.reset_index(drop=True,inplace=True)
+                ldf=ldf.sort_values('word_no')
+                _ltext=''
+                for idx in range(len(ldf)):
+                    text=ldf.iloc[idx,0]
+                    _ltext+=' '+text
+                lines.append(_ltext)
+            text="\n".join(lines)
+            st.text_area("Multi-line Output", value=text)
+                
 if __name__ == '__main__':  
     main()
