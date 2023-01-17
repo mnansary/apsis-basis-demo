@@ -9,7 +9,6 @@ from __future__ import print_function
 import re
 import os 
 import torch
-import bangla
 import torchaudio.functional as F
 from bnnumerizer import numerize 
 from TTS.utils.synthesizer import Synthesizer
@@ -62,10 +61,6 @@ class TextToAudio(object):
         self.bn_sample_rate=bn_sample_rate
         self.sample_rate=out_sample_rate  
         self.resample_params=resample_params
-    
-    #https://gist.github.com/mohabmes/33b724edfd4f0f3ec2e6644168db516e
-    def removeUnnecessarySpaces(self,text):
-        return re.sub(r'[\n\t\ ]+', ' ', text)
     
     # public
     def bn_tts(self,text):
@@ -167,3 +162,7 @@ class TextToAudio(object):
         data=self.process_text(text)
         audio=self.get_audio(data)
         return audio.detach().cpu().numpy()
+
+if __name__=="__main__":
+    t2a=TextToAudio("../weights")
+    t2a("কথার কথা")
