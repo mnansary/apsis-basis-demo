@@ -13,7 +13,7 @@ import torchaudio.functional as F
 from bnnumerizer import numerize 
 from TTS.utils.synthesizer import Synthesizer
 from bnunicodenormalizer import Normalizer 
-
+import soundfile as sf
 
 # initialize
 bnorm=Normalizer()
@@ -165,4 +165,7 @@ class TextToAudio(object):
 
 if __name__=="__main__":
     t2a=TextToAudio("../weights")
-    t2a("কথার কথা")
+    print("loaded model")
+    audio=t2a("কথার কথা")
+    sf.write("test.wav", audio, 22050)
+    print("saved wav")
