@@ -65,7 +65,7 @@ def upload():
             if "file" in request.files:
                 # Get the file from post request
                 f = request.files['file']
-                file_path = os.path.join(basepath,"images",secure_filename(f.filename))
+                file_path = os.path.join(basepath,"data",secure_filename(f.filename))
                 # save file
                 file_ext=pathlib.Path(file_path).suffix
                 if file_ext not in [".jpg",".png",".jpeg"]:

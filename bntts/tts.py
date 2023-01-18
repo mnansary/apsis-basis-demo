@@ -162,10 +162,3 @@ class TextToAudio(object):
         data=self.process_text(text)
         audio=self.get_audio(data)
         return audio.detach().cpu().numpy()
-
-if __name__=="__main__":
-    t2a=TextToAudio("../weights")
-    print("loaded model")
-    audio=t2a("কথার কথা")
-    sf.write("test.wav", audio, 22050)
-    print("saved wav")
