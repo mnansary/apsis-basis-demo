@@ -68,9 +68,9 @@ def main():
         image = Image.open(uploaded_file)
         arr = np.array(image)
         cols[0].image(arr)
-        image.save("images/data.png")
+        image.save("data/data.png")
         with st.spinner('Executing OCR'):
-            res = requests.post(OCR_API, files={'file': open("images/data.png", 'rb')})
+            res = requests.post(OCR_API, files={'file': open("data/data.png", 'rb')})
             res=res.json()
             # rec
             df=pd.DataFrame(res["result"])
