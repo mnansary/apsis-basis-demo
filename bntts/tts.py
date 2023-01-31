@@ -25,7 +25,8 @@ def normalize(sen):
 class TextToAudio(object):
     
     def __init__(self,
-                 weights_dir,
+                 config,
+                 cpkt,
                  bn_sample_rate=22050,
                  out_sample_rate=22050,
                  find_nd_replace={
@@ -44,7 +45,6 @@ class TextToAudio(object):
         '''
             Instantiates Text to Audio conversion object for bangla
             args:
-                weights_dir : path to tts model weights folder with tts superfolder as config and cpkt file
                 bn_sample_rate : bangla audio sample rate [optional] default: 22050
                 out_sample_rate : audio sample rate [optional] default: 22050
                 resample_params : audio resampling parameters [optional]
@@ -53,8 +53,6 @@ class TextToAudio(object):
                 # Audio converter:https://www.kaggle.com/code/shahruk10/inference-notebook-wav2vec2
                 # main:---> https://github.com/mobassir94/comprehensive-bangla-tts/blob/43e2ae8b3f7f862c058da2e22941e01d41ec8ed4/Apps/multilingual_tts_v2.py
         '''
-        cpkt            =   os.path.join(weights_dir,"tts","checkpoint_811000.pth")
-        config          =   os.path.join(weights_dir,"tts","config.json")
         self.bn_model   =   Synthesizer(cpkt,config)
 
         self.find_nd_replace=find_nd_replace

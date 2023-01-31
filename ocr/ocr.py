@@ -6,7 +6,7 @@ from __future__ import print_function
 from .utils import localize_box,LOG_INFO,create_mask
 from .detector import Detector
 #from .lang import LangClassifier
-from .robustScanner import RobustScanner
+from .rs import RobustScanner
 from paddleocr import PaddleOCR
 import os
 import cv2
@@ -30,7 +30,7 @@ class OCR(object):
         self.line_en=PaddleOCR(use_angle_cls=True, lang='en',rec_algorithm='SVTR_LCNet',use_gpu=True)
         self.det=Detector()
         LOG_INFO("Loaded Detector and en-rec ")
-        self.bnocr=RobustScanner(os.path.join(weights_dir,"rec"))
+        self.bnocr=RobustScanner(os.path.join(weights_dir,"rec2"))
         LOG_INFO("Loaded bn-rec")
         
         

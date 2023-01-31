@@ -4,7 +4,7 @@
 """
 from __future__ import print_function
 # Flask utils
-from flask import Flask,request, render_template,jsonify
+from flask import Flask,request, render_template,jsonify,send_file
 from time import time
 from datetime import datetime
 # models
@@ -13,7 +13,8 @@ import soundfile as sf
 # Define a flask app
 app = Flask(__name__)
 # initialize ocr
-T2A=TextToAudio("weights")
+T2A=TextToAudio("weights/tts/config.json",
+                "weights/tts/checkpoint_811000.pth")
 
 
 @app.route('/', methods=['GET'])
@@ -55,6 +56,7 @@ def upload():
                 logs["file-save-time"]=round(time()-save_start,2)
                 update_log(logs)
                 return jsonify({"result":"success"})
+                # add send file options
         
         except Exception as e:
              return jsonify({"error":consttruct_error("","INTERNAL_SERVER_ERROR","500","","please try again with a different text")})
