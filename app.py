@@ -94,6 +94,13 @@ def main():
                 lines.append(_ltext)
             text="\n".join(lines)
             st.text_area("Multi-line Output", value=text)
+            res = requests.post(TTS_API, data={'text':text})
+            res=res.json()
+            if res["result"]=="success":
+                audio_file = open('data/test.wav','rb')
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes,format="audio/wav")
+            
                 
 if __name__ == '__main__':  
     main()

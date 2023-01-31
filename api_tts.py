@@ -49,14 +49,12 @@ def upload():
             logs["req-time"] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
             save_start=time()
             
-            if "text" in request.form['text']:
-                text=request.form['text']
-                audio=T2A(text)
-                sf.write("data/test.wav", audio, 22050)
-                logs["file-save-time"]=round(time()-save_start,2)
-                update_log(logs)
-                return jsonify({"result":"success"})
-                # add send file options
+            text=request.form['text']
+            audio=T2A(text)
+            sf.write("data/test.wav", audio, 22050)
+            logs["file-save-time"]=round(time()-save_start,2)
+            update_log(logs)
+            return jsonify({"result":"success"})
         
         except Exception as e:
              return jsonify({"error":consttruct_error("","INTERNAL_SERVER_ERROR","500","","please try again with a different text")})
